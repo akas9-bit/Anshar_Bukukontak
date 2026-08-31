@@ -178,7 +178,6 @@ class _BerandaPageState extends State<BerandaPage>
           ),
           FavoritPage(
             daftarFavorit: daftarFavorit,
-            onHapus: _hapusKontak,
             onToggleFavorit: _toggleFavorit,
           ),
         ],
@@ -253,44 +252,44 @@ class KontakPage extends StatelessWidget {
   }
 }
 
+// FavoritPage gabungan: Menampilkan kontak bawaan (Anshar) 
+// dan kontak dinamis yang ditandai bintang
 class FavoritPage extends StatelessWidget {
   final List<KontakModel> daftarFavorit;
-  final Function(KontakModel) onHapus;
   final Function(KontakModel) onToggleFavorit;
 
   const FavoritPage({
     super.key,
     required this.daftarFavorit,
-    required this.onHapus,
     required this.onToggleFavorit,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (daftarFavorit.isEmpty) {
-      return const Center(
-        child: Text(
-          'Belum ada kontak favorit',
-          style: TextStyle(fontSize: 16, color: Colors.grey),
-        ),
-      );
-    }
-
-    return ListView.builder(
-      itemCount: daftarFavorit.length,
-      itemBuilder: (context, index) {
-        final kontak = daftarFavorit[index];
-        return ListTile(
-          leading: const Icon(Icons.person),
-          title: Text(kontak.nama),
-          subtitle: Text('${kontak.email}\n${kontak.telepon}'),
+    return ListView(
+      children: [
+        // Kontak statis/bawaan milikmu
+        const ListTile(
+          leading: Icon(Icons.person),
+          title: Text('Anshar Deas Alif D'),
+          subtitle: Text('anshar@gmail.com\n081234567890'),
           isThreeLine: true,
-          trailing: IconButton(
-            icon: const Icon(Icons.star, color: Colors.amber),
-            onPressed: () => onToggleFavorit(kontak),
+          trailing: Icon(Icons.star, color: Colors.amber),
+        ),
+        // Kontak dinamis dari tab 'Kontak' yang ditandai bintang
+        ...daftarFavorit.map(
+          (kontak) => ListTile(
+            leading: const Icon(Icons.person),
+            title: Text(kontak.nama),
+            subtitle: Text('${kontak.email}\n${kontak.telepon}'),
+            isThreeLine: true,
+            trailing: IconButton(
+              icon: const Icon(Icons.star, color: Colors.amber),
+              onPressed: () => onToggleFavorit(kontak),
+            ),
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }
@@ -382,7 +381,7 @@ class TentangPage extends StatelessWidget {
           children: [
             const CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage('assets/ans.jpeg'), 
+              backgroundImage: AssetImage('assets/ans.jpeg'),
             ),
             const SizedBox(height: 16),
             const Text(
